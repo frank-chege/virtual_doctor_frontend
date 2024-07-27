@@ -1,2 +1,1 @@
-# virtual_doctor_frontend
-Virtual doctor frontend using react
+virtual doctor frontend using react and bootstrap
