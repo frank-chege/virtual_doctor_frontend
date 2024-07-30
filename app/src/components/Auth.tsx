@@ -14,11 +14,15 @@ function Login() {
     e.preventDefault();
     //send data to the backend
     axios
-      .post(`http://127.0.0.1:5000/${role}/login`, JSON.stringify(data), {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .post(
+        `http://127.0.0.1:5000/api/auth/login/${role}`,
+        JSON.stringify(data),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then((res) => console.log(res))
       .catch((error) => console.log(console.log(error)));
   };
