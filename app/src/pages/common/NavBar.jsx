@@ -11,6 +11,9 @@ function NavBar() {
         <Link className="navbar-brand" to="/login">
           Login
         </Link>
+        <Link className="navbar-brand" to="/register">
+          Register
+        </Link>
         <Link className="navbar-brand" to="/booking">
           Book Consultation
         </Link>

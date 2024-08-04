@@ -1,5 +1,7 @@
+//authenticates login requests
 import { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function Login() {
   //states to manage input values
@@ -31,12 +33,13 @@ function Login() {
       <form onSubmit={HandleSubmit}>
         <h3>Enter your details to login</h3>
         <div className="mb-3">
-          <label className="form-label">I am a</label>
+          <label className="form-label">Login as: </label>
           <select
             className="form-select"
             onChange={(e) => ChangeRole(e.target.value)}
+            required
           >
-            <option value="user">Patient</option>
+            <option value="patient">Patient</option>
             <option value="doctor">Doctor</option>
             <option value="hospital">Hospital admin</option>
             <option value="pharmacy">Pharmacy admin</option>
@@ -49,6 +52,7 @@ function Login() {
             type="email"
             value={email}
             onChange={(e) => ChangeEmail(e.target.value)}
+            required
           />
         </div>
 
@@ -59,8 +63,15 @@ function Login() {
             type="password"
             value={pwd}
             onChange={(e) => ChangePwd(e.target.value)}
+            required
           />
         </div>
+        <p>
+          Don't have an account?
+          <Link className="navbar-brand" to="/register">
+            Register here
+          </Link>
+        </p>
         <button type="submit" className="btn btn-primary ">
           Login
         </button>
