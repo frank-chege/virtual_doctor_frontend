@@ -26,7 +26,7 @@ function Register() {
       payload.birthday = birthday;
       payload.gender = gender;
     } else {
-      payload.files;
+      payload.files = file;
     }
   };
 

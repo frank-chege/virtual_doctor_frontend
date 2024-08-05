@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 
 function Login() {
   //states to manage input values
-  const [email, ChangeEmail] = useState("");
-  const [pwd, ChangePwd] = useState("");
-  const [role, ChangeRole] = useState("patient");
+  const [email, changeEmail] = useState("");
+  const [pwd, changePwd] = useState("");
+  const [role, changeRole] = useState("patient");
   //data object
   const data = { email, pwd };
   //handle form submission
-  const HandleSubmit = (e) => {
+  const handleSubmit = (e) => {
     //prevent reload
     e.preventDefault();
     //send data to the backend
@@ -30,13 +30,13 @@ function Login() {
   };
   return (
     <div>
-      <form onSubmit={HandleSubmit}>
+      <form onSubmit={handleSubmit}>
         <h3>Enter your details to login</h3>
         <div className="mb-3">
           <label className="form-label">Login as: </label>
           <select
             className="form-select"
-            onChange={(e) => ChangeRole(e.target.value)}
+            onChange={(e) => changeRole(e.target.value)}
             required
           >
             <option value="patient">Patient</option>
@@ -51,7 +51,7 @@ function Login() {
             className="form-control"
             type="email"
             value={email}
-            onChange={(e) => ChangeEmail(e.target.value)}
+            onChange={(e) => changeEmail(e.target.value)}
             required
           />
         </div>
@@ -62,7 +62,7 @@ function Login() {
             className="form-control"
             type="password"
             value={pwd}
-            onChange={(e) => ChangePwd(e.target.value)}
+            onChange={(e) => changePwd(e.target.value)}
             required
           />
         </div>
