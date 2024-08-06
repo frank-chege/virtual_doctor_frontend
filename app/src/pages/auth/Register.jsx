@@ -2,6 +2,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
+import { validator } from "validator";
 
 function Register() {
   const [role, changeRole] = useState("patient");
@@ -14,20 +17,22 @@ function Register() {
   const [confirmPwd, changeConfirmPwd] = useState("");
   const [file, changeFile] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (e) => {
     event.preventDefault();
     //check if passwords match
     if (role === "patient" && pwd !== confirmPwd) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match");
     }
     const payload = { role, name, email, contact };
-    if (role != "patient") {
+    if (role == "patient") {
       payload.pwd = pwd;
       payload.birthday = birthday;
       payload.gender = gender;
     } else {
       payload.files = file;
     }
+    //send data to backend
+    await axios.post("/api/auth/register", JSON.stringify(payload));
   };
 
   return (
@@ -162,6 +167,7 @@ function Register() {
       <button type="submit" className="btn btn-primary ">
         Register
       </button>
+      <ToastContainer />
     </form>
   );
 }
