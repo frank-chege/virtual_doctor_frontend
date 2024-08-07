@@ -16,9 +16,10 @@ function Register() {
   const [gender, changeGender] = useState("");
   const [confirmPwd, changeConfirmPwd] = useState("");
   const [file, changeFile] = useState("");
+  const [address, changeAddress] = useState("");
 
   const handleSubmit = async (e) => {
-    event.preventDefault();
+    e.preventDefault();
     //check if passwords match
     if (role === "patient" && pwd !== confirmPwd) {
       toast.error("Passwords do not match");
@@ -30,6 +31,7 @@ function Register() {
       payload.gender = gender;
     } else {
       payload.files = file;
+      payload.address = address;
     }
     //send data to backend
     await axios.post("/api/auth/register", JSON.stringify(payload));
@@ -89,19 +91,33 @@ function Register() {
       </div>
       {/**file upload for pharmacy and hospital */}
       {role != "patient" && (
-        <div className="mb-3">
-          <label className="form-label">
-            Upload documents verifying your institution
-          </label>
-          <input
-            className="form-control"
-            type="file"
-            accept=".pdf, .docx"
-            onChange={(e) => changeFile(e.target.files)}
-            placeholder="Upload files. pdf/docx"
-            required
-          />
-        </div>
+        <>
+          <div className="mb-3">
+            <label className="form-label">Address</label>
+            <input
+              className="form-control"
+              type="text"
+              value={address}
+              onChange={(e) => changeAddress(e.target.value)}
+              placeholder="Enter your address"
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">
+              Upload documents verifying your institution
+            </label>
+            <input
+              className="form-control"
+              type="file"
+              accept=".pdf, .docx"
+              onChange={(e) => changeFile(e.target.files)}
+              placeholder="Upload files. pdf/docx"
+              required
+            />
+          </div>
+        </>
       )}
       {/**input fields to be hidden if role is not patient */}
       {role == "patient" && (
