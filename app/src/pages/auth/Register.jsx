@@ -15,26 +15,70 @@ function Register() {
   const [birthday, changeBirthday] = useState("");
   const [gender, changeGender] = useState("");
   const [confirmPwd, changeConfirmPwd] = useState("");
-  const [file, changeFile] = useState("");
+  const [files, changeFile] = useState("");
   const [address, changeAddress] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     //check if passwords match
     if (role === "patient" && pwd !== confirmPwd) {
-      toast.error("Passwords do not match");
+      toast.error("Passwords do not match!");
+      return;
     }
-    const payload = { role, name, email, contact };
-    if (role == "patient") {
-      payload.pwd = pwd;
-      payload.birthday = birthday;
-      payload.gender = gender;
+    if (role === "patient" && pwd.length < 6) {
+      toast.error("Password is too short! Have atleast 6 characters");
+      return;
+    }
+    //check if file was uploaded for hospital and pharmacy
+    if (role !== "patient" && files.length < 1) {
+      toast.error("Please upload verification files");
+      return;
+    }
+    let data;
+    let contType;
+    //create the patient payload
+    if (role === "patient") {
+      data = JSON.stringify({
+        role,
+        name,
+        email,
+        contact,
+        pwd,
+        birthday,
+        gender,
+      });
+      contType = "application/json";
     } else {
-      payload.files = file;
-      payload.address = address;
+      //create payload for hospital and pharmacy
+      data = new FormData();
+      for (let len = 0; len < files.length; len++) {
+        data.append("files", files[len]);
+      }
+      data.append(
+        "payload",
+        JSON.stringify({ role, name, email, contact, address })
+      );
+      contType = "multipart/form-data";
     }
+    console.log(...data);
     //send data to backend
-    await axios.post("/api/auth/register", JSON.stringify(payload));
+    await axios
+      .post(`http://127.0.0.1:5000/api/auth/register/${role}`, data, {
+        headers: {
+          "Content-Type": contType,
+        },
+      })
+      .then((res) => {
+        if (res.status == 201) {
+          toast.success("Registration successful. Please login to continue");
+        } else {
+          toast.error("Registration failed");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        toast("An error occured! Please try again.");
+      });
   };
 
   return (
@@ -111,6 +155,7 @@ function Register() {
             <input
               className="form-control"
               type="file"
+              multiple
               accept=".pdf, .docx"
               onChange={(e) => changeFile(e.target.files)}
               placeholder="Upload files. pdf/docx"
