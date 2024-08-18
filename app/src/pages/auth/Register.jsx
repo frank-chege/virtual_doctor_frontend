@@ -69,15 +69,11 @@ function Register() {
         },
       })
       .then((res) => {
-        if (res.status == 201) {
-          toast.success("Registration successful. Please login to continue");
-        } else {
-          toast.error("Registration failed");
-        }
+        toast.success(res.data.message);
       })
       .catch((error) => {
         console.log(error);
-        toast("An error occured! Please try again.");
+        toast(error.message);
       });
   };
 

@@ -2,6 +2,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 function Login() {
   //states to manage input values
@@ -9,7 +11,7 @@ function Login() {
   const [pwd, changePwd] = useState("");
   const [role, changeRole] = useState("patient");
   //data object
-  const data = { email, pwd };
+  const data = { email, pwd, role };
   //handle form submission
   const handleSubmit = (e) => {
     //prevent reload
@@ -25,8 +27,10 @@ function Login() {
           },
         }
       )
-      .then((res) => console.log(res))
-      .catch((error) => console.log(console.log(error)));
+      .then((res) => {
+        toast.success(res.data.message);
+      })
+      .catch((error) => toast.error(error.response.data.error));
   };
   return (
     <div>
@@ -75,6 +79,7 @@ function Login() {
         <button type="submit" className="btn btn-primary ">
           Login
         </button>
+        <ToastContainer />
       </form>
     </div>
   );
