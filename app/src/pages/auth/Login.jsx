@@ -1,7 +1,7 @@
 //authenticates login requests
 import { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -10,12 +10,14 @@ function Login() {
   const [email, changeEmail] = useState("");
   const [pwd, changePwd] = useState("");
   const [role, changeRole] = useState("patient");
+  const [login, changeLoginMessage] = useState(false);
   //data object
   const data = { email, pwd, role };
   //handle form submission
   const handleSubmit = (e) => {
     //prevent reload
     e.preventDefault();
+    changeLoginMessage(true);
     //send data to the backend
     axios
       .post(
@@ -28,9 +30,23 @@ function Login() {
         }
       )
       .then((res) => {
+        //store the csrf token in session storage
+        sessionStorage.setItem("csrfToken", res.data.csrf_token);
         toast.success(res.data.message);
       })
-      .catch((error) => toast.error(error.response.data.error));
+      .catch((error) => {
+        if (
+          error &&
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          toast.error(error.response.data.error);
+        } else {
+          toast.error("An error occured. PLease try again");
+        }
+        changeLoginMessage(false);
+      });
   };
   return (
     <div>
@@ -77,7 +93,7 @@ function Login() {
           </Link>
         </p>
         <button type="submit" className="btn btn-primary ">
-          Login
+          {login && <>Logging in...</> ? <>Logging in...</> : <>Login</>}
         </button>
         <ToastContainer />
       </form>
