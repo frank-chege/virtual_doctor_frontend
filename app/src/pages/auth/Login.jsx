@@ -4,15 +4,21 @@ import axios from "axios";
 import { Link, redirect } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+import { useGlobalContext } from "./GlobalContext";
+import { Redirect } from "react-router-dom";
 
 function Login() {
-  //states to manage input values
+  //define states to manage input values
   const [email, changeEmail] = useState("");
   const [pwd, changePwd] = useState("");
   const [role, changeRole] = useState("patient");
   const [login, changeLoginMessage] = useState(false);
-  //data object
+  //access global context
+  const { authStatus, setAuthStatus } = useGlobalContext();
+
+  //create payload
   const data = { email, pwd, role };
+
   //handle form submission
   const handleSubmit = (e) => {
     //prevent reload
@@ -32,6 +38,15 @@ function Login() {
       .then((res) => {
         //store the csrf token in session storage
         sessionStorage.setItem("csrfToken", res.data.csrf_token);
+
+        //change the login status
+        try {
+          setAuthStatus(true);
+          console.log(authStatus);
+        } catch (error) {
+          console.log(error);
+        }
+
         toast.success(res.data.message);
       })
       .catch((error) => {

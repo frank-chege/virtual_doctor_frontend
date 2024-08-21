@@ -72,8 +72,16 @@ function Register() {
         toast.success(res.data.message);
       })
       .catch((error) => {
-        console.log(error);
-        toast(error.message);
+        if (
+          error &&
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          toast.error(error.response.data.error);
+        } else {
+          toast.error("An error occured. PLease try again");
+        }
       });
   };
 
