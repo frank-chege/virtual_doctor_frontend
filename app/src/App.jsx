@@ -19,7 +19,14 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/booking" element={<Booking />} />
         <Route path="/buyMeds" element={<BuyMeds />} />
-        <ProtectedRoute component={<PatientHome />} />
+        <Route
+          path="/patient/home"
+          element={
+            <ProtectedRoute>
+              <PatientHome />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

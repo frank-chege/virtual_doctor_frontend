@@ -1,11 +1,10 @@
 //authenticates login requests
 import { useState } from "react";
 import axios from "axios";
-import { Link, redirect } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { useGlobalContext } from "./GlobalContext";
-import { Redirect } from "react-router-dom";
 
 function Login() {
   //define states to manage input values
@@ -13,9 +12,9 @@ function Login() {
   const [pwd, changePwd] = useState("");
   const [role, changeRole] = useState("patient");
   const [login, changeLoginMessage] = useState(false);
-  //access global context
-  const { authStatus, setAuthStatus } = useGlobalContext();
 
+  const { authStatus, setAuthStatus } = useGlobalContext();
+  const navigate = useNavigate();
   //create payload
   const data = { email, pwd, role };
 
@@ -38,16 +37,9 @@ function Login() {
       .then((res) => {
         //store the csrf token in session storage
         sessionStorage.setItem("csrfToken", res.data.csrf_token);
-
         //change the login status
-        try {
-          setAuthStatus(true);
-          console.log(authStatus);
-        } catch (error) {
-          console.log(error);
-        }
-
-        toast.success(res.data.message);
+        setAuthStatus(true);
+        navigate("/patient/home", { state: { message: res.data.message } });
       })
       .catch((error) => {
         if (

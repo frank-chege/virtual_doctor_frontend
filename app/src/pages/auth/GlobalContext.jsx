@@ -1,5 +1,5 @@
 //create a global state to manage login status
-import React, { createContext, useState, useContext, Children } from "react";
+import React, { createContext, useState, useContext } from "react";
 
 const GlobalContext = createContext();
 
