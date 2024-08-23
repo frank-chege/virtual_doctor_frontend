@@ -2,8 +2,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useGlobalContext } from "./GlobalContext";
 
 function Login() {
@@ -13,7 +12,7 @@ function Login() {
   const [role, changeRole] = useState("patient");
   const [login, changeLoginMessage] = useState(false);
 
-  const { authStatus, setAuthStatus } = useGlobalContext();
+  const { setAuthStatus, setRole } = useGlobalContext();
   const navigate = useNavigate();
   //create payload
   const data = { email, pwd, role };
@@ -37,9 +36,11 @@ function Login() {
       .then((res) => {
         //store the csrf token in session storage
         sessionStorage.setItem("csrfToken", res.data.csrf_token);
-        //change the login status
+        //change the login status and role
         setAuthStatus(true);
-        navigate("/patient/home", { state: { message: res.data.message } });
+        setRole(res.data.role);
+        navigate("/patient/home");
+        toast.success(res.data.message);
       })
       .catch((error) => {
         if (
@@ -102,7 +103,6 @@ function Login() {
         <button type="submit" className="btn btn-primary ">
           {login && <>Logging in...</> ? <>Logging in...</> : <>Login</>}
         </button>
-        <ToastContainer />
       </form>
     </div>
   );

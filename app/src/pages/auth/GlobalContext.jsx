@@ -6,9 +6,12 @@ const GlobalContext = createContext();
 const GlobalContextProvider = ({ children }) => {
   //manage login state
   const [authStatus, setAuthStatus] = useState(false);
+  const [role, setRole] = useState("public");
 
   return (
-    <GlobalContext.Provider value={{ authStatus, setAuthStatus }}>
+    <GlobalContext.Provider
+      value={{ authStatus, setAuthStatus, role, setRole }}
+    >
       {children}
     </GlobalContext.Provider>
   );
