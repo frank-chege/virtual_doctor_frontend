@@ -3,10 +3,11 @@ import { useGlobalContext } from "../auth/GlobalContext";
 import { useEffect } from "react";
 
 export default function Logout() {
-  const { setAuthStatus } = useGlobalContext();
+  const { authStatus, setAuthStatus, role, setRole } = useGlobalContext();
   const navigate = useNavigate();
   useEffect(() => {
     setAuthStatus(false);
+    setRole("public");
     navigate("/");
-  }, [setAuthStatus, navigate]);
+  }, [authStatus, role]);
 }

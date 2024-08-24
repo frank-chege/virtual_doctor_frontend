@@ -1,12 +1,22 @@
 //create a global state to manage login status
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 const GlobalContext = createContext();
 
 const GlobalContextProvider = ({ children }) => {
-  //manage login state
-  const [authStatus, setAuthStatus] = useState(false);
-  const [role, setRole] = useState("public");
+  //initialize state with local storage
+  const [authStatus, setAuthStatus] = useState(() => {
+    const value = localStorage.getItem("authStatus");
+    return value ? JSON.parse(value) : false;
+  });
+  const [role, setRole] = useState(() => {
+    return localStorage.getItem("role") || "public";
+  });
+  //sync state with local storage
+  useEffect(() => {
+    localStorage.setItem("authStatus", JSON.stringify(authStatus));
+    localStorage.setItem("role", role);
+  }, [authStatus, role]);
 
   return (
     <GlobalContext.Provider
