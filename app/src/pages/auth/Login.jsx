@@ -1,9 +1,10 @@
 //authenticates login requests
 import { useState } from "react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useGlobalContext } from "./GlobalContext";
+import { extractTokenFromCookie } from "../common/utils";
+import { configureRequest } from "../common/utils";
 
 function Login() {
   //define states to manage input values
@@ -14,6 +15,7 @@ function Login() {
 
   const { setAuthStatus, setRole } = useGlobalContext();
   const navigate = useNavigate();
+  const axios = configureRequest();
   //create payload
   const data = { email, pwd, role };
 
@@ -24,19 +26,14 @@ function Login() {
     changeLoginMessage(true);
     //send data to the backend
     axios
-      .post(
-        `http://127.0.0.1:5000/api/auth/login/${role}`,
-        JSON.stringify(data),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      .post(`/auth/login/${role}`, JSON.stringify(data), {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then((res) => {
-        //store the csrf token in session storage
-        sessionStorage.setItem("csrfToken", res.data.csrf_token);
         //change the login status and role
+        extractTokenFromCookie();
         setAuthStatus(true);
         setRole(res.data.role);
         navigate("/patient/home");
@@ -51,6 +48,7 @@ function Login() {
         ) {
           toast.error(error.response.data.error);
         } else {
+          console.log(error);
           toast.error("An error occured. PLease try again");
         }
         changeLoginMessage(false);

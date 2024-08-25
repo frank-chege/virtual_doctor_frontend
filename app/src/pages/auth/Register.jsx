@@ -1,10 +1,8 @@
 //manages registration
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
-import { validator } from "validator";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Register() {
   const [role, changeRole] = useState("patient");
@@ -17,16 +15,23 @@ function Register() {
   const [confirmPwd, changeConfirmPwd] = useState("");
   const [files, changeFile] = useState("");
   const [address, changeAddress] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    //validate name
+    if (name.length < 5) {
+      toast.error("Name is too short!");
+      return;
+    }
     //check if passwords match
     if (role === "patient" && pwd !== confirmPwd) {
       toast.error("Passwords do not match!");
       return;
     }
+
     if (role === "patient" && pwd.length < 6) {
-      toast.error("Password is too short! Have atleast 6 characters");
+      toast.error("Password is too short! should be atleast 6 characters");
       return;
     }
     //check if file was uploaded for hospital and pharmacy
@@ -60,7 +65,6 @@ function Register() {
       );
       contType = "multipart/form-data";
     }
-    console.log(...data);
     //send data to backend
     await axios
       .post(`http://127.0.0.1:5000/api/auth/register/${role}`, data, {
@@ -69,6 +73,7 @@ function Register() {
         },
       })
       .then((res) => {
+        navigate("/login");
         toast.success(res.data.message);
       })
       .catch((error) => {
@@ -232,7 +237,6 @@ function Register() {
       <button type="submit" className="btn btn-primary ">
         Register
       </button>
-      <ToastContainer />
     </form>
   );
 }
