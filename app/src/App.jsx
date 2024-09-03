@@ -10,14 +10,12 @@ import BuyMeds from "./pages/common/BuyMeds";
 import PatientLayout from "./pages/roles/Patient/PatientLayout";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import HospitalLayout from "./pages/roles/Hospital/HospitalLayout";
 
 export default function App() {
-  const { authStatus } = useGlobalContext();
   return (
     <Router>
       <ToastContainer position="top-center" limit={3} />
-      {!authStatus ? <NavBar /> : ""}
-      {console.log(authStatus)}
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
@@ -25,6 +23,7 @@ export default function App() {
         <Route path="/booking" element={<Booking />} />
         <Route path="/buyMeds" element={<BuyMeds />} />
         <Route path="/patient/*" element={<PatientLayout />} />
+        <Route path="/hospital/*" element={<HospitalLayout />} />
       </Routes>
     </Router>
   );

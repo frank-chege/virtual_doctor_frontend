@@ -13,9 +13,9 @@ function Login() {
   const [role, changeRole] = useState("patient");
   const [login, changeLoginMessage] = useState(false);
 
-  const { setAuthStatus, setRole } = useGlobalContext();
+  const { setEmail, setRole } = useGlobalContext();
   const navigate = useNavigate();
-  const axios = configureRequest();
+  const request = configureRequest();
   //create payload
   const data = { email, pwd, role };
 
@@ -25,18 +25,19 @@ function Login() {
     e.preventDefault();
     changeLoginMessage(true);
     //send data to the backend
-    axios
+    request
       .post(`/auth/login/${role}`, JSON.stringify(data), {
         headers: {
           "Content-Type": "application/json",
         },
       })
       .then((res) => {
-        //change the login status and role
+        //set the email and role
+        const role = res.data.role;
         extractTokenFromCookie();
-        setAuthStatus(true);
-        setRole(res.data.role);
-        navigate("/patient/home");
+        setEmail(res.data.email);
+        setRole(role);
+        navigate(`/${role}/home`);
         toast.success(res.data.message);
       })
       .catch((error) => {

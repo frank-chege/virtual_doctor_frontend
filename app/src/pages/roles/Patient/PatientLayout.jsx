@@ -6,24 +6,21 @@ import MedicalRecords from "./PatientMedicalRecords";
 import BuyMeds from "../../common/BuyMeds";
 import Booking from "../../common/Booking";
 import { useGlobalContext } from "../../auth/GlobalContext";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { checkAuthStatus } from "../../auth/checkAuthStatus";
+import { toast } from "react-toastify";
 
 export default function PatientLayout({ children }) {
   const { authStatus } = useGlobalContext();
   const navigate = useNavigate();
 
-  //check login status
-  useEffect(() => {
-    if (!authStatus) {
-      navigate("/login");
-    }
-  }, [authStatus]);
+  //check status status
+  if (!checkAuthStatus) {
+    toast("Permission denied! Please login to continue");
+    navigate("/login");
+  }
+
   return (
     <>
       <PatientNavbar />

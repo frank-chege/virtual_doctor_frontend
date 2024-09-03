@@ -6,7 +6,6 @@ export default function Logout() {
   const { authStatus, setAuthStatus, role, setRole } = useGlobalContext();
   const navigate = useNavigate();
   useEffect(() => {
-    setAuthStatus(false);
     setRole("public");
     navigate("/");
   }, [authStatus, role]);

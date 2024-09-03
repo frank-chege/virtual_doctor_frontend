@@ -5,23 +5,20 @@ const GlobalContext = createContext();
 
 const GlobalContextProvider = ({ children }) => {
   //initialize state with local storage
-  const [authStatus, setAuthStatus] = useState(() => {
-    const value = localStorage.getItem("authStatus");
-    return value ? JSON.parse(value) : false;
+  const [email, setEmail] = useState(() => {
+    return localStorage.getItem("email") || "";
   });
   const [role, setRole] = useState(() => {
     return localStorage.getItem("role") || "public";
   });
   //sync state with local storage
   useEffect(() => {
-    localStorage.setItem("authStatus", JSON.stringify(authStatus));
+    localStorage.setItem("email", email);
     localStorage.setItem("role", role);
-  }, [authStatus, role]);
+  }, [email, role]);
 
   return (
-    <GlobalContext.Provider
-      value={{ authStatus, setAuthStatus, role, setRole }}
-    >
+    <GlobalContext.Provider value={{ email, setEmail, role, setRole }}>
       {children}
     </GlobalContext.Provider>
   );
