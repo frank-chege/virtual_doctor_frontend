@@ -13,9 +13,11 @@ import "react-toastify/dist/ReactToastify.css";
 import HospitalLayout from "./pages/roles/Hospital/HospitalLayout";
 
 export default function App() {
+  const { role } = useGlobalContext();
   return (
     <Router>
       <ToastContainer position="top-center" limit={3} />
+      {role === "pubic" ? <NavBar /> : ""}
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
